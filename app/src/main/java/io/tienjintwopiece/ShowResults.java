@@ -14,11 +14,15 @@ import android.view.MenuItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -26,36 +30,47 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by BenGirardeau on 4/16/16.
  */
+
+
 public class ShowResults extends Activity implements AsyncResponse {
     APICalls asyncTask = new APICalls(this);
     RelativeLayout relativeLayout;
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+    String global_req;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.show_results);
         asyncTask.delegate = this;
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
 //        String zipcode = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         Bundle extras = intent.getExtras();
         String requests = extras.getString("REQUESTS");
+        global_req = requests.replaceAll(",", ", ");
         String location = extras.getString("LOCATION");
         relativeLayout = (RelativeLayout)findViewById(R.id.mainlayout);
         new APICalls(this).execute(requests, location);
     }
 
     public void processFinish(String output) throws IOException, JSONException {
-        TextView textView = new TextView(this);
+        TextView textView = (TextView) findViewById(R.id.restaurants);
         JSONObject parser = new JSONObject(output);
         if (parser.has("businesses")){
             JSONArray businesses = parser.getJSONArray("businesses");
             int count = (businesses).length();
-            String names = "";
+            String names = "Queries: " + global_req;
             for (int i = 0; i < count; i++) {
                 JSONObject business = (JSONObject) businesses.get(i);
                 String name = business.getString("name");
+                JSONArray locationlist = business.getJSONObject("location")
+                        .getJSONArray("display_address");
+                //String local = business.getString("display_address");
                 textView.setText(name);
-                names += "\n\n " + name;
+                names += "\n\n" + name + ":\n ";
+                for(int j = 0; j < locationlist.length(); j++) {
+                    names += locationlist.get(j) + "\n";
+                }
             }
             if (names.length() == 0) {
                 String result = "Sorry, there are no businesses that match your search";
@@ -75,7 +90,7 @@ public class ShowResults extends Activity implements AsyncResponse {
             }
         }
         Log.e("did i get here", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        setContentView(textView);
+//        setContentView(textView);
     }
 
     @Override

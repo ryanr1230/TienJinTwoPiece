@@ -74,14 +74,10 @@ public class Post extends AsyncTask<File, Void, IdentifyResults> {
             Log.e("asdf", responseText);
             r = objectMapper.readValue(responseText, Map.class);
         }catch(Exception e){}
-//        Response r = objectMapper.readValue(responseText, Response.class);
         ArrayList results = (ArrayList) r.get("results");
         Map result = (Map) ((Map) results.get(0)).get("result");
-//        System.out.println(result);
         Map tag = (Map) result.get("tag");
-//        System.out.println(tag);
         return new IdentifyResults((ArrayList)tag.get("classes"), (ArrayList)tag.get("probabilities"));
-//        System.out.println(r.results.result.tag.probs);
     }
 
     protected void onPostExecute(IdentifyResults results) {
