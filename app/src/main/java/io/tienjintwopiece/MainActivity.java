@@ -1,22 +1,93 @@
 package io.tienjintwopiece;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity implements AsyncResponseForCamera {
 
-    public static final String EXTRA_MESSAGE = "io.tienjintwopiece.MESSAGE";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
+    private Uri fileUri;
+    private File savedFile;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // create Intent to take a picture and return control to the calling application
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "dcim");
+        imagesFolder.mkdirs();
+        savedFile = new File(imagesFolder, "testingoutputpic.jpg");
+        fileUri = Uri.fromFile(savedFile); // create a file to save the image
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+
+        // start the image capture Intent
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
+
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Image captured and saved to fileUri specified in the Intent
+                Toast.makeText(this, "Image saved to:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // User cancelled the image capture
+            } else {
+                // Image capture failed, advise user
+            }
+        }
+
+        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Video captured and saved to fileUri specified in the Intent
+                Toast.makeText(this, "Video saved to:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // User cancelled the video capture
+            } else {
+                // Video capture failed, advise user
+            }
+        }
+
+        new Post(this).execute(savedFile);
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+    }
+
+    public void processFinish(IdentifyResults res) {
+        Log.e("is it a failure??", "probably");
+        TextView t = new TextView(this);
+//        TextView t = (TextView) findViewById(R.id.output);
+        t.setText(res.tags.toString() + "\n\n\n" + res.probabilities.toString());
+        setContentView(t);
+        Intent intent = new Intent(this, ShowResults.class);
+        Bundle extras = new Bundle();
+        extras.putString("LOCATION", "Dallas, TX");
+        extras.putString("REQUESTS", TextUtils.join(",", res.tags));
+        intent.putExtras(extras);
+        startActivity(intent);
+    }
+
+    public static final String EXTRA_MESSAGE = "io.tienjintwopiece.MESSAGE";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,17 +109,5 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-    public void getRecommendations(View view){
-        Intent intent = new Intent(this, ShowResults.class);
-        Bundle extras = new Bundle();
-        EditText editText = (EditText)findViewById(R.id.request_form);
-        EditText editText2 = (EditText)findViewById(R.id.location_form);
-        String message1 = editText.getText().toString();
-        String message2 = editText2.getText().toString();
-        extras.putString("REQUESTS", message1);
-        extras.putString("LOCATION", message2);
-        intent.putExtras(extras);
-        startActivity(intent);
     }
 }

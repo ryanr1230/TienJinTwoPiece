@@ -2,6 +2,7 @@ package io.tienjintwopiece;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -73,6 +74,7 @@ public class ShowResults extends Activity implements AsyncResponse {
                 textView.setText(error.getString("text"));
             }
         }
+        Log.e("did i get here", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         setContentView(textView);
     }
 
@@ -91,7 +93,7 @@ public class ShowResults extends Activity implements AsyncResponse {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.output) {
             return true;
         }
 
