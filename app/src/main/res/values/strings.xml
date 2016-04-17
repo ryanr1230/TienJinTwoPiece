@@ -3,4 +3,11 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="request_request">Please enter your requests</string>
+    <string name="request_location">Please enter your location</string>
+    <string name="button_send">Submit</string>
+    <string name="request_hint">Requests</string>
+    <string name="location_hint">City, State</string>
+    <string name="title_activity_show_results">ShowResults</string>
+
 </resources>

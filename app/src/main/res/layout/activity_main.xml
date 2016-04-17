@@ -5,7 +5,48 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/request_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/request_request"
+        android:textSize="50dp"
+        android:gravity="center"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/request_terms">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></LinearLayout>
+        <EditText
+            android:id="@+id/request_form"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:hint="@string/request_hint"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/request_form">
+            <EditText
+            android:id="@+id/location_form"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:hint="@string/location_hint"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_send"
+            android:onClick="getRecommendations"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

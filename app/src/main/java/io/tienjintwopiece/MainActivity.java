@@ -1,12 +1,17 @@
 package io.tienjintwopiece;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+
 
 public class MainActivity extends Activity {
 
+    public static final String EXTRA_MESSAGE = "io.tienjintwopiece.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,5 +38,17 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void getRecommendations(View view){
+        Intent intent = new Intent(this, ShowResults.class);
+        Bundle extras = new Bundle();
+        EditText editText = (EditText)findViewById(R.id.request_form);
+        EditText editText2 = (EditText)findViewById(R.id.location_form);
+        String message1 = editText.getText().toString();
+        String message2 = editText2.getText().toString();
+        extras.putString("REQUESTS", message1);
+        extras.putString("LOCATION", message2);
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 }
