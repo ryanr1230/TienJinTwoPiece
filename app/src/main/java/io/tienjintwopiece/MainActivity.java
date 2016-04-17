@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponseForCamera {
 
@@ -78,7 +80,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponseForC
         Intent intent = new Intent(this, ShowResults.class);
         Bundle extras = new Bundle();
         extras.putString("LOCATION", "Dallas, TX");
-        extras.putString("REQUESTS", TextUtils.join(",", res.tags.subList(0, 4)));
+        List<String> reqs = res.tags;
+        reqs.remove("no person");
+        reqs.remove("food");
+        reqs.remove("plate");
+        reqs.remove("desktop");
+        reqs.remove("closeup");
+        reqs.remove("dish");
+        reqs.remove("cooking");
+        extras.putString("REQUESTS", TextUtils.join(",", reqs.subList(0,4)));
         Log.e("is error", extras.toString());
         intent.putExtras(extras);
         startActivity(intent);
