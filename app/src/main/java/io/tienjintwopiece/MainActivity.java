@@ -75,14 +75,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponseForC
 
     public void processFinish(IdentifyResults res) {
         Log.e("is it a failure??", "probably");
-        TextView t = new TextView(this);
-//        TextView t = (TextView) findViewById(R.id.output);
-        t.setText(res.tags.toString() + "\n\n\n" + res.probabilities.toString());
-        setContentView(t);
         Intent intent = new Intent(this, ShowResults.class);
         Bundle extras = new Bundle();
         extras.putString("LOCATION", "Dallas, TX");
-        extras.putString("REQUESTS", TextUtils.join(",", res.tags));
+        extras.putString("REQUESTS", TextUtils.join(",", res.tags.subList(0, 4)));
+        Log.e("is error", extras.toString());
         intent.putExtras(extras);
         startActivity(intent);
     }

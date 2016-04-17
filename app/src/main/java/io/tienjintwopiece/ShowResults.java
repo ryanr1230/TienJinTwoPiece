@@ -55,7 +55,7 @@ public class ShowResults extends Activity implements AsyncResponse {
                 JSONObject business = (JSONObject) businesses.get(i);
                 String name = business.getString("name");
                 textView.setText(name);
-                names += " " + name;
+                names += "\n\n " + name;
             }
             if (names.length() == 0) {
                 String result = "Sorry, there are no businesses that match your search";
